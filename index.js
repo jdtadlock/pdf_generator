@@ -86,7 +86,5 @@ inquirer.prompt([
     name: 'color',
     message: 'What color would you like for your background?'
   }
-]).then(data => {
-  getGithubInfo(data)
-    .then(generatePDF);
-});
+]).then(getGithubInfo)
+  .then(generatePDF);
