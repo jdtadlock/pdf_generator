@@ -55,25 +55,28 @@ function generatePDF({ data, color }) {
 }
 
 async function getGithubInfo({ username, color }) {
-  const gh = await new Github({ token });
+  const gh = new Github({ token });
 
-  const user = await gh.getUser(username);
+  try {
+    const user = await gh.getUser(username);
+    const profile = await user.getProfile();
+    const followers = await user.listFollowers();
+    const stars = await user.listStarredRepos();
 
-  const profile = await user.getProfile();
-  const followers = await user.listFollowers();
-  const stars = await user.listStarredRepos();
-
-  return {
-    color,
-    data: {
-      name: profile.data.name,
-      image: profile.data.avatar_url,
-      url: profile.data.url,
-      repos: profile.data.public_repos,
-      followers: followers.data.length,
-      stars: stars.data.length
-    }
-  };
+    return {
+      color,
+      data: {
+        name: profile.data.name,
+        image: profile.data.avatar_url,
+        url: profile.data.url,
+        repos: profile.data.public_repos,
+        followers: followers.data.length,
+        stars: stars.data.length
+      }
+    };
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 
